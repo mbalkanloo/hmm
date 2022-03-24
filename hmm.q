@@ -8,7 +8,7 @@
 / O      observations
 / alpha  forward matrix
 / beta   backward matrix
-/ g      global state matrix for dynamic algorithms
+/ g      global state matrix symbol for dynamic algorithms
 
 \d .hmm
 
@@ -65,10 +65,9 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 	r:`alpha`beta`pi`a`b!(forward[pi;a;b;O];backward[a;b;O];pi;a;b);
 	m:-0Wf;
 	n:sum last r`alpha;
-	while[(t<n-m)&i>0;
-		i:i-1;
-		r:reestimate[r`pi;r`a;r`b;S;V;O];
+	while[(t<n-m)&-1<i-:1;
 		m:n;
+		r:reestimate[r`pi;r`a;r`b;S;V;O];
 		n:sum last forward[r`pi;r`a;r`b;O]];
 	r}
 
