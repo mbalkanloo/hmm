@@ -37,8 +37,11 @@ viterbi:{[pi;a;b;O;S]S first each idesc each forward[pi;a;b;O]}
 
 gamma:{[alpha;beta]a:alpha*beta;a%sum each a}
 
+/ flip each utility for flipping submatrices
+fe:flip each
+
 xi:{[alpha;beta;a;b;O]
-	r:flip each(1_beta)*'flip each(-1_alpha)*'flip each flip[a]*/:b@/:-1_next O;
+	r:fe(1_beta)*'fe(-1_alpha)*'fe flip[a]*/:b@/:-1_next O;
 	r%sum each raze each r}
 
 PI:{[alpha;beta]gamma[alpha;beta]0}
