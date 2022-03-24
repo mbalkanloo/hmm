@@ -1,1 +1,1 @@
-Hidden Markov Models for q
+Hidden Markov Models for kdb+.

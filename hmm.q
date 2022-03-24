@@ -34,6 +34,7 @@ backward:{[a;b;O]
 
 backwardInduction:{[g;a;b;o]g upsert sum each a*\:b[o]*last[value g]}
 
+/ NOTE this is not the standard Viterbi definition
 viterbi:{[pi;a;b;O;S]S first each idesc each forward[pi;a;b;O]}
 
 gamma:{[alpha;beta]a:alpha*beta;a%sum each a}
@@ -72,15 +73,3 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 	r}
 
 \d .
-
-/ / example from wikipedia entry for Baum-Welch 
-/ S:0 1;
-/ V:`E`N;
-/ b:(.3 .7;.8 .2);
-/ a:(.5 .5;.3 .7);
-/ pi:.2 .8;
-/ O:V?seq:`N`N`N`N`N`E`E`N`N`N; 
-/ show .hmm.forward[pi;a;b;O]
-/ show .hmm.backward[a;b;O]
-/ show .hmm.viterbi[pi;a;b;O;S]
-/ show each .hmm.baumWelch[pi;a;b;S;V;O;.001;100]
