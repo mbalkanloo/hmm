@@ -53,9 +53,8 @@ B:{[alpha;beta;S;V;O]
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
 	beta:backward[a;b;O];
-	`pi`a`b!(PI[alpha;beta];A[alpha;beta;a;b;O];B[alpha;beta;S;V;O])}
+	`alpha`beta`pi`a`b!(alpha;beta;PI[alpha;beta];A[alpha;beta;a;b;O];B[alpha;beta;S;V;O])}
 
-/ TODO stop calling forward on each iteration
 baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iteration criteria
 	/ difference in observation probability greater than [t]hreshold
@@ -63,12 +62,7 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 
 	m:-0Wf;
 	n:sum last forward[pi;a;b;O];
-	while[(t<n-m)&i>0;
-		i:i-1;
-		m:n;
-		r:reestimate[pi;a;b;S;V;O];
-		n:sum last forward[r`pi;r`a;r`b;O];
-	];
+	while[(t<n-m)&i>0;i:i-1;m:n;r:reestimate[pi;a;b;S;V;O];n:sum last r`alpha];
 	r}
 
 \d .
