@@ -7,7 +7,7 @@ S:0 1
 / observation space
 V:`E`N
 / observation probability matrix
-b:(.3 .7;.8 .2)
+b:flip (.3 .7;.8 .2)
 / state transition probability matrix
 a:(.5 .5;.3 .7)
 / initial state probability

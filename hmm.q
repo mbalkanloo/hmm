@@ -1,7 +1,7 @@
 / based on Rabiner (1989)
 
 / a      transition matrix
-/ b      observation probability matrix
+/ b      observation probability matrix (flipped)
 / pi     initial state probability
 / S      state space
 / V      observation space
@@ -14,7 +14,6 @@
 
 forward:{[pi;a;b;O]
 	.hmm.g:();
-	b:flip b;
 	.hmm.g,:(pi;pi*b first O);
 	forwardInduction[`.hmm.g;b;a;]each 1_O;
 	r:1_.hmm.g;
@@ -25,7 +24,6 @@ forwardInduction:{[g;b;a;o]g upsert b[o]*last[value g]mmu a}
 
 backward:{[a;b;O]
 	.hmm.g:();
-	b:flip b;
 	.hmm.g,:enlist count[first b]#1f;
 	backwardInduction[`.hmm.g;a;b;] each reverse O;
 	r:1_reverse .hmm.g;
@@ -40,7 +38,7 @@ viterbi:{[pi;a;b;O;S]S first each idesc each forward[pi;a;b;O]}
 gamma:{[alpha;beta]a:alpha*beta;a%sum each a}
 
 xi:{[alpha;beta;a;b;O]
-	r:flip each(1_beta)*'flip each(-1_alpha)*'flip each flip[a]*/:flip[b]@/:-1_next O;
+	r:flip each(1_beta)*'flip each(-1_alpha)*'flip each flip[a]*/:b@/:-1_next O;
 	r%sum each raze each r}
 
 PI:{[alpha;beta]gamma[alpha;beta]0}
@@ -51,7 +49,7 @@ B:{[alpha;beta;S;V;O]
 	m:gamma[alpha;beta];
 	l:{sum x[y 0]where x[0]=y 1};
 	r:(0N;j)#l[flip[O,'m];]each(1+til count S)cross til j:count V;
-	r%sum m}
+	flip r%sum m}
 
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
