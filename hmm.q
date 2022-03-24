@@ -57,7 +57,12 @@ B:{[alpha;beta;S;V;O]
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
 	beta:backward[a;b;O];
-	`alpha`beta`pi`a`b!(alpha;beta;PI[alpha;beta];A[alpha;beta;a;b;O];B[alpha;beta;S;V;O])}
+	`alpha`beta`pi`a`b!(
+		alpha;
+		beta;
+		PI[alpha;beta];
+		A[alpha;beta;a;b;O];
+		B[alpha;beta;S;V;O])}
 
 baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iteration criteria
