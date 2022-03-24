@@ -53,26 +53,22 @@ B:{[alpha;beta;S;V;O]
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
 	beta:backward[a;b;O];
-	(PI[alpha;beta];A[alpha;beta;a;b;O];B[alpha;beta;S;V;O])}
+	`pi`a`b!(PI[alpha;beta];A[alpha;beta;a;b;O];B[alpha;beta;S;V;O])}
 
+/ TODO stop calling forward on each iteration
 baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iteration criteria
 	/ difference in observation probability greater than [t]hreshold
 	/ iterations less than max [i]terations
 
-	(`.hmm.pi;`.hmm.a;`.hmm.b)set'(pi;a;b);
-	alpha:forward[pi;a;b;O];
 	m:-0Wf;
-	n:sum last alpha;
+	n:sum last forward[pi;a;b;O];
 	while[(t<n-m)&i>0;
 		i:i-1;
 		m:n;
-		r:reestimate[.hmm.pi;.hmm.a;.hmm.b;S;V;O];
-		(`.hmm.pi;`.hmm.a;`.hmm.b)set'r;
-		alpha:forward[.hmm.pi;.hmm.a;.hmm.b;O];
-		n:sum last alpha;
+		r:reestimate[pi;a;b;S;V;O];
+		n:sum last forward[r`pi;r`a;r`b;O];
 	];
-	delete pi, a, b from `.hmm;
 	r}
 
 \d .
