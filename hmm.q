@@ -30,6 +30,8 @@ forward:{[pi;a;b;O]
 forwardInduction:{[g;f;b;a;o]r:b[o]*last[value g]mmu a;m:reciprocal sum r;f upsert m;g upsert r*m}
 
 backward:{[f;a;b;O]
+	/ expects scale [f]actors input
+
 	.hmm.g:();
 	i:enlist count[first b]#1f;
 	.hmm.g,:i%f 0; 
