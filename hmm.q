@@ -1,4 +1,7 @@
 / based on Rabiner (1989)
+/ implemented with scaling
+
+\d .hmm
 
 / a      transition matrix
 / b      observation probability matrix (flipped)
@@ -10,30 +13,35 @@
 / beta   backward matrix
 / g      global state matrix symbol for dynamic algorithms
 
-\d .hmm
-
 forward:{[pi;a;b;O]
+	/ returns tuple of alpha and scale factors
+
 	.hmm.g:();
-	.hmm.g,:(pi;pi*b first O);
-	forwardInduction[`.hmm.g;b;a;]each 1_O;
+	.hmm.f:();
+	i:(pi;pi*b first O);
+	.hmm.g,:i%sum each i;
+	.hmm.f,:reciprocal each sum each i;
+	forwardInduction[`.hmm.g;`.hmm.f;b;a;]each 1_O;
 	r:1_.hmm.g;
-	delete g from `.hmm;
-	r}
+	f:1_.hmm.f;
+	delete g, f from `.hmm;
+	(r;f)}
 
-forwardInduction:{[g;b;a;o]g upsert b[o]*last[value g]mmu a}
+forwardInduction:{[g;f;b;a;o]r:b[o]*last[value g]mmu a;m:reciprocal sum r;f upsert m;g upsert r*m}
 
-backward:{[a;b;O]
+backward:{[f;a;b;O]
 	.hmm.g:();
-	.hmm.g,:enlist count[first b]#1f;
-	backwardInduction[`.hmm.g;a;b;] each reverse O;
+	i:enlist count[first b]#1f;
+	.hmm.g,:i%f 0; 
+	backwardInduction[`.hmm.g;a;b;] each reverse O,'f;
 	r:1_reverse .hmm.g;
 	delete g from `.hmm;
 	r}
 
-backwardInduction:{[g;a;b;o]g upsert sum each a*\:b[o]*last[value g]}
+backwardInduction:{[g;a;b;o]r:sum each a*\:b[o 0]*last[value g];g upsert r*o 1}
 
 / NOTE this is not the standard Viterbi definition
-viterbi:{[pi;a;b;O;S]S first each idesc each forward[pi;a;b;O]}
+viterbi:{[pi;a;b;O;S]S first each idesc each forward[pi;a;b;O] 0}
 
 gamma:{[alpha;beta]a:alpha*beta;a%sum each a}
 
@@ -56,13 +64,13 @@ B:{[alpha;beta;S;V;O]
 
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
-	beta:backward[a;b;O];
+	beta:backward[alpha 1;a;b;O];
 	`alpha`beta`pi`a`b!(
 		alpha;
 		beta;
-		PI[alpha;beta];
-		A[alpha;beta;a;b;O];
-		B[alpha;beta;S;V;O])}
+		PI[alpha 0;beta];
+		A[alpha 0;beta;a;b;O];
+		B[alpha 0;beta;S;V;O])}
 
 baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iteration criteria
@@ -71,11 +79,11 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 
 	r:`alpha`beta`pi`a`b!(forward[pi;a;b;O];backward[a;b;O];pi;a;b);
 	m:-0Wf;
-	n:sum last r`alpha;
+	n:sum .[%;] last each r[`alpha];
 	while[(t<n-m)&-1<i-:1;
 		m:n;
 		r:reestimate[r`pi;r`a;r`b;S;V;O];
-		n:sum last forward[r`pi;r`a;r`b;O]];
+		n:sum .[%;] last each forward[r`pi;r`a;r`b;O]];
 	r}
 
 \d .
