@@ -14,8 +14,7 @@
 / g      global state matrix symbol for dynamic algorithms
 
 forward:{[pi;a;b;O]
-	/ returns tuple of alpha and scale factors
-
+	/ returns a tuple of alpha and scale factors
 	.hmm.g:();
 	.hmm.f:();
 	i:(pi;pi*b first O);
@@ -30,8 +29,7 @@ forward:{[pi;a;b;O]
 forwardInduction:{[g;f;b;a;o]r:b[o]*last[value g]mmu a;m:reciprocal sum r;f upsert m;g upsert r*m}
 
 backward:{[f;a;b;O]
-	/ expects scale [f]actors input
-
+	/ expects scale [f]actors
 	.hmm.g:();
 	i:enlist count[first b]#1f;
 	.hmm.g,:i%f 0; 
@@ -75,10 +73,9 @@ reestimate:{[pi;a;b;S;V;O]
 		B[alpha 0;beta;S;V;O])}
 
 baumWelch:{[pi;a;b;S;V;O;t;i]
-	/ iteration criteria
+	/ iterate until 
 	/ difference in observation probability greater than [t]hreshold
 	/ iterations less than max [i]terations
-
 	r:`alpha`beta`pi`a`b!(forward[pi;a;b;O];backward[a;b;O];pi;a;b);
 	m:-0Wf;
 	n:neg sum log r[`alpha] 1;
