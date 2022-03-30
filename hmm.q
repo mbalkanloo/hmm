@@ -12,6 +12,7 @@
 / alpha  forward matrix
 / beta   backward matrix
 / g      global state matrix symbol for dynamic algorithms
+/ f      global state matrix symbol for dynamic algorithms
 
 forward:{[pi;a;b;O]
 	/ returns a tuple of alpha and scale factors
