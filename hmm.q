@@ -74,8 +74,8 @@ reestimate:{[pi;a;b;S;V;O]
 
 baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iterate until 
-	/ difference in observation probability greater than [t]hreshold
-	/ iterations less than max [i]terations
+	/ difference in observation probability less than [t]hreshold
+	/ iterations equal to max [i]terations
 	r:`alpha`beta`pi`a`b!(forward[pi;a;b;O];backward[a;b;O];pi;a;b);
 	m:-0Wf;
 	n:neg sum log r[`alpha] 1;
