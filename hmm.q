@@ -1,5 +1,6 @@
 / based on Rabiner (1989)
 / implemented with scaling
+/ TODO implement multiple observation sequences
 
 \d .hmm
 
