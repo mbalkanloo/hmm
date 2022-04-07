@@ -70,20 +70,21 @@ Bd:{[m]sum m}
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
 	beta:backward[alpha 1;a;b;O];
-	`alpha`beta`pi`a`b!(
-		alpha;
-		beta;
-		PI[alpha 0;beta];
-		A[alpha 0;beta;a;b;O];
-		B[alpha 0;beta;S;V;O])}
+	`pi`a`b!(PI[alpha 0;beta];A[alpha 0;beta;a;b;O];B[alpha 0;beta;S;V;O])}
+
+reestimates:{[pi;a;b;S;V;Os]
+	alphas:forward[pi;a;b;]each Os;
+	betas:alphas[;1] backward[;a;b;]' Os;
+	/ TODO pi
+	`pi`a`b!(PI[alphas[0][0];betas[0]];As[alphas[;0];betas;a;b;Os];Bs[alphas[;0];betas;S;V;Os])}
 
 baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iterate until 
 	/ difference in observation probability less than [t]hreshold
 	/ iterations equal to max [i]terations
-	r:`alpha`beta`pi`a`b!(forward[pi;a;b;O];backward[a;b;O];pi;a;b);
+	r:`pi`a`b!(pi;a;b);
 	m:-0Wf;
-	n:neg sum log r[`alpha] 1;
+	n:neg sum log forward[pi;a;b;O] 1;
 	I:i;
 	while[(t<n-m)&-1<i-:1;
 		m:n;
@@ -91,5 +92,22 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 		n:neg sum log forward[r`pi;r`a;r`b;O] 1];
 	r[`iterations]:I-i;
 	r}
+
+baumWelchs:{[pi;a;b;S;V;Os;t;i]
+	/ iterate until 
+	/ difference in observation probability less than [t]hreshold
+	/ iterations equal to max [i]terations
+	r:`pi`a`b!(pi;a;b);
+	m:-0Wf;
+	/ TODO confirm likelihood calculation
+	n:prd neg sum log (forward[pi;a;b;]each Os)[;1];
+	I:i;
+	while[(t<n-m)&-1<i-:1;
+		m:n;
+		r:reestimates[r`pi;r`a;r`b;S;V;Os];
+		n:prd neg sum log (forward[r`pi;r`a;r`b;]each Os)[;1]];
+	r[`iterations]:I-i;
+	r}
+
 
 \d .
