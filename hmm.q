@@ -1,6 +1,6 @@
 / based on Rabiner (1989)
 / implemented with scaling
-/ TODO implement multiple observation sequences
+/ implemented multiple observation sequences based on frequency interpretation
 
 \d .hmm
 
@@ -56,13 +56,16 @@ xi:{[alpha;beta;a;b;O]
 
 PI:{[alpha;beta]gamma[alpha;beta]0}
 
-A:{[alpha;beta;a;b;O]sum[xi[alpha;beta;a;b;O]]%sum -1_gamma[alpha;beta]}
+A:{[alpha;beta;a;b;O]An[alpha;beta;a;b;O]%Ad[alpha;beta]}
+As:{[alphas;betas;a;b;Os]sum[.[An[;;a;b;];]each flip (alphas;betas;Os)]%sum alphas Ad' betas}
+An:{[alpha;beta;a;b;O]sum xi[alpha;beta;a;b;O]}
+Ad:{[alpha;beta]sum -1_gamma[alpha;beta]}
 
-B:{[alpha;beta;S;V;O]
-	m:gamma[alpha;beta];
-	l:{sum x[y 0]where x[0]=y 1};
-	r:(0N;j)#l[flip[O,'m];]each(1+til count S)cross til j:count V;
-	flip r%sum m}
+B:{[alpha;beta;S;V;O]m:gamma[alpha;beta];flip Bn[m;S;V;O]%Bd m}
+Bs:{[alphas;betas;S;V;Os]ms:alphas gamma' betas;flip sum[ms Bn[;S;V;]' Os]%sum Bd each ms}
+Bn:{[m;S;V;O](0N;j)#Bnl[flip[O,'m];]each(1+til count S)cross til j:count V}
+Bnl:{sum x[y 0]where x[0]=y 1}
+Bd:{[m]sum m}
 
 reestimate:{[pi;a;b;S;V;O]
 	alpha:forward[pi;a;b;O];
