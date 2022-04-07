@@ -84,10 +84,12 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 	r:`alpha`beta`pi`a`b!(forward[pi;a;b;O];backward[a;b;O];pi;a;b);
 	m:-0Wf;
 	n:neg sum log r[`alpha] 1;
+	I:i;
 	while[(t<n-m)&-1<i-:1;
 		m:n;
 		r:reestimate[r`pi;r`a;r`b;S;V;O];
 		n:neg sum log forward[r`pi;r`a;r`b;O] 1];
+	r[`iterations]:I-i;
 	r}
 
 \d .
