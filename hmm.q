@@ -86,7 +86,7 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 	m:-0Wf;
 	n:neg sum log forward[pi;a;b;O] 1;
 	I:i;
-	while[(t<n-m)&-1<i-:1;
+	while[(t<n-m)&(not n=m)&-1<i-:1;
 		m:n;
 		r:reestimate[r`pi;r`a;r`b;S;V;O];
 		n:neg sum log forward[r`pi;r`a;r`b;O] 1];
@@ -99,13 +99,13 @@ baumWelchs:{[pi;a;b;S;V;Os;t;i]
 	/ iterations equal to max [i]terations
 	r:`pi`a`b!(pi;a;b);
 	m:-0Wf;
-	/ TODO confirm likelihood calculation
-	n:prd neg sum log (forward[pi;a;b;]each Os)[;1];
+	/ TODO rigorous likelihood calculation
+	n:neg sum sum log (forward[pi;a;b;]each Os)[;1];
 	I:i;
-	while[(t<n-m)&-1<i-:1;
+	while[(t<n-m)&(not n=m)&-1<i-:1;
 		m:n;
 		r:reestimates[r`pi;r`a;r`b;S;V;Os];
-		n:prd neg sum log (forward[r`pi;r`a;r`b;]each Os)[;1]];
+		n:neg sum sum log (forward[r`pi;r`a;r`b;]each Os)[;1]];
 	r[`iterations]:I-i;
 	r}
 
