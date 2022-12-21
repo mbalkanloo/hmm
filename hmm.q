@@ -37,7 +37,7 @@ viterbi:{[pi;a;b;O;S]S first each idesc each 1_fwd[pi;a;b;O] 0}
 
 gamma:{[alpha;beta]1_a*sf each a:alpha*beta}
 
-xi:{[alpha;beta;a;b;O]m:(-1_1_alpha)*\:a;n:2#/:enlist each(flip[b]@/:1_O)*2_beta;r*sfr each r:m*n}
+xi:{[alpha;beta;a;b;O]m:(-1_1_alpha)*\:a;n:count[first a]#/:enlist each(flip[b]@/:1_O)*2_beta;r*sfr each r:m*n}
 
 PI:{[alpha;beta]gamma[alpha;beta]0}
 A:{[alpha;beta;a;b;O]An[alpha;beta;a;b;O]%Ad[alpha;beta]}
