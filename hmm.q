@@ -28,8 +28,9 @@ fwd:{[pi;a;b;O]
 
 / backward
 bwd:{[a;b;O]
-	i*:sf i:count[first b]#1f;
-	l:{[a;b;x;y]r*sf r:a mmu b[;y]*x};
+	i*:sf i:count[first flip b]#1f;
+/	l:{[a;b;x;y]r*sf r:a mmu b[;y]*x};
+	l:{[a;b;x;y]r*sf r:sum each a*\:b[;y]*x};
 	reverse enlist[i],l[a;b;;]\[i;reverse O]}
 
 viterbi:{[pi;a;b;O;S]S first each idesc each 1_fwd[pi;a;b;O] 0}
@@ -58,7 +59,7 @@ baumWelch:{[pi;a;b;S;V;O;t;i]
 	/ iterations equal to max [i]terations
 	r:`pi`a`b!(pi;a;b);
 	m:-0Wf;
-	n:neg sum log forward[pi;a;b;O] 1;
+	n:neg sum log fwd[pi;a;b;O] 1;
 	I:i-1;
 	while[(t<n-m)&(not n=m)&-1<i-:1;
 		m:n;
