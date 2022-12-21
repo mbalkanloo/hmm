@@ -29,7 +29,6 @@ fwd:{[pi;a;b;O]
 / backward
 bwd:{[a;b;O]
 	i*:sf i:count[first flip b]#1f;
-/	l:{[a;b;x;y]r*sf r:a mmu b[;y]*x};
 	l:{[a;b;x;y]r*sf r:sum each a*\:b[;y]*x};
 	reverse enlist[i],l[a;b;;]\[i;reverse O]}
 
