@@ -62,5 +62,3 @@ show `observed`state!flip seq,'.hmm.viterbi[pi;a;b;O;S]
 show "baum-welch"
 show r:.hmm.baumWelch[pi;a;b;S;V;O;.03;100]
 show `observed`state!flip seq,'.hmm.viterbi[r`pi;r`a;r`b;O;S]
-
-
