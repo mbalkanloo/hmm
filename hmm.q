@@ -17,6 +17,7 @@ sf:{reciprocal sum x}
 sfr:{sf raze x}
 
 / forward 
+/ returns tuple of alpha matrix and scale factors
 fwd:{[pi;a;b;O]
 	i*:c:sf i:pi*b[;first O];
 	`.hmm.c set enlist c;
